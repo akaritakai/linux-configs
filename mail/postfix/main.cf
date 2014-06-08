@@ -1,0 +1,52 @@
+# See /usr/share/postfix/main.cf.dist for a more commented and complete version.
+
+smtpd_banner = mail.some.domain SMTP Server
+biff = no
+
+# appending .domain is the MUA's job
+append_dot_mydomain = no
+
+readme_directory = no
+
+# TLS parameters
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+smtp_tls_security_level = may
+smtpd_tls_security_level = may
+smtp_tls_loglevel = 1
+smtpd_tls_loglevel = 0
+tls_ssl_options = NO_COMPRESSION
+smtpd_tls_cert_file = /etc/ssl/certs/some.domain.crt
+smtpd_tls_key_file = /etc/ssl/private/some.domain.key
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3
+smtpd_tls_mandatory_ciphers = high
+tls_high_cipherlist = EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128-SHA:AES128-SHA
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtpd_tls_dh512_param_file = /etc/postfix/dh512.pem
+smtpd_tls_dh1024_param_file = /etc/postfix/dh1024.pem
+
+# SASL options
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+
+# Mail Settings
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = mail.some.domain
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = localhost
+mynetworks = 127.0.0.0/8 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+
+# Virtual Transport Settings
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf
