@@ -1,0 +1,39 @@
+;
+; BIND data file for some.domain
+;
+
+;
+; SOA Record
+;
+$TTL	3600
+@	IN	SOA	ns1.some.domain.	hostmaster.some.domain. )
+			2014060801		; Serial in format yyyymmdd with ss version
+			14400			; Refresh
+			3600			; Retry
+			1209600			; Expire
+			3600 )			; Negative Cache TTL
+
+; Name Server Records
+	IN	NS	ns1.some.domain.
+	.... other records here
+
+; Mail Server Records
+	IN	MX 10	mail.some.domain.
+	.... other records here
+
+; A Records
+@	IN	A	ipv4_addr_here
+ns1	IN	A	ipv4_addr_here
+mail	IN	A	ipv4_addr_here
+vps	IN	A	ipv4_addr_here
+
+; AAAA Records
+@	IN	AAAA	ipv6_addr_here
+ns1	IN	AAAA	ipv6_addr_here
+mail	IN	AAAA	ipv6_addr_here
+
+; CNAME Records
+vpn	IN	CNAME	vps.some.domain.
+
+; SPF Record
+some.domain.	IN	TXT	"v=spf1 a -all" ; allows any system with an A record to send mail
