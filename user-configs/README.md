@@ -15,10 +15,12 @@ This list specifically includes programs not installed by default on Ubuntu 14.0
  - [nmap](http://nmap.org/) is a security scanner, but there's no faster way to test if a service is listening properly than with this tool. ```apt-get -y install nmap```
  - [ffmpeg](http://www.ffmpeg.org/) is the tried and true audio converter. Nothing else works quite as well, or has quite as much support. You're better off compiling it from scratch though for some of the newer codecs like HEVC.
  - [weechat](http://www.weechat.org/) is hands down the best IRC client in existence. Accept no substitutes.
-```
-  add-apt-repository ppa:nesthib/weechat
-  apt-get update
-  apt-get -y install weechat
-```
+
+     ```
+     add-apt-repository ppa:nesthib/weechat
+     apt-get update
+     apt-get -y install weechat
+     ```
+
  - [ZNC](http://wiki.znc.in/ZNC) is weechat is the best IRC client, then ZNC is surely the best bouncer. Best compiled from the latest source.
  - [Keychain](http://www.funtoo.org/Keychain) is a gpg-agent/ssh-agent utility that allows concurrent logins to share the same agent instance! ```apt-get -y install keychain```
