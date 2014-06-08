@@ -7,8 +7,7 @@ Installation
 ```sh
 apt-get update
 apt-get -y install ssh
-ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
-ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
+ssh-keygen -b 4096 -t rsa -f /etc/ssh/ssh_host_rsa_key
 ```
 
 Configs
