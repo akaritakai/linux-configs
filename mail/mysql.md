@@ -48,7 +48,7 @@ CREATE TABLE `virtual_aliases` (
   `domain_id` INT NOT NULL,
   `source` VARCHAR(100) NOT NULL,
   `destination` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
