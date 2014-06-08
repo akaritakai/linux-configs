@@ -1,12 +1,16 @@
-#!/bin/sh
-PDIR=`pwd`
-ZONEDIR="/var/cache/bind" #location of your zone files
-ZONE=$1
-ZONEFILE=$2
-DNSSERVICE="bind9" #On CentOS/Fedora replace this with "named"
-cd $ZONEDIR
-SERIAL=`/usr/sbin/named-checkzone $ZONE $ZONEFILE | egrep -ho '[0-9]{10}'`
-sed -i 's/'$SERIAL'/'$(($SERIAL+1))'/' $ZONEFILE
-/usr/sbin/dnssec-signzone -A -3 $(head -c 1000 /dev/random | sha1sum | cut -b 1-16) -N increment -o $1 -t $2
-service $DNSSERVICE reload
-cd $PDIR
+#!/bin/bash
+
+function update_serial() {
+  local current_serial=`/usr/sbin/named-checkzone some.domain /etc/bind/db.some.domain | grep -Eho '[0-9]{10}'`
+  local today=`date +%Y%m%d`
+  if [[ $current_serial == $today* ]]; then
+    local new_serial="$(($current_serial+1))"
+  else
+    local new_serial="$today00"
+  fi
+  sed -i 's/'$current_serial'/'$new_serial'/' /etc/bind/db.some.domain
+}
+
+update_serial
+/usr/sbin/dnssec-signzone -A -3 $(head -c 1000 /dev/random | sha1sum | cut -b 1-16) -N INCREMENT -o some.domain -t /etc/bind/db.some.domain
+service bind9 restart
