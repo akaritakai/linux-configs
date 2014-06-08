@@ -52,3 +52,8 @@ CREATE TABLE `virtual_aliases` (
   FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
+
+Create Users
+------------
+
+Use the mysql.sh script
