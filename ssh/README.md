@@ -7,9 +7,9 @@ Installation
 ```sh
 apt-get update
 apt-get -y install ssh
+ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
 ```
-
-Additionally delete all the ssh keys in the /etc/ssh/ folder. When the OpenSSH server restarts, it should repopulate them.
 
 Configs
 -------
