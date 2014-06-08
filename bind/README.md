@@ -11,7 +11,7 @@ apt-get -y install bind9 bind9utils
 
 Update the RNDC key
 ```sh
-rndc-confget -a -b 512
+rndc-confgen -a -b 512
 ```
 
 DNSSEC Configuration
