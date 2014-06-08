@@ -1,14 +1,11 @@
 #!/bin/bash
 
 function update_serial() {
-  local current_serial=`/usr/sbin/named-checkzone some.domain /etc/bind/db.some.domain | grep -Eho '[0-9]{10}'`
+  local serial=`/usr/sbin/named-checkzone some.domain /etc/bind/db.some.domain | grep -Eho '[0-9]{10}'`
   local today=`date +%Y%m%d`
-  if [[ $current_serial == $today* ]]; then
-    local new_serial="$(($current_serial+1))"
-  else
-    local new_serial="$today00"
+  if [[ $serial != $today* ]]; then
+    sed -i 's/'$serial'/'$serial00'/' /etc/bind/db.some.domain
   fi
-  sed -i 's/'$current_serial'/'$new_serial'/' /etc/bind/db.some.domain
 }
 
 update_serial
