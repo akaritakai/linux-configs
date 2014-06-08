@@ -34,7 +34,7 @@ To make changes to the zone, edit db.some.domain, and then run
 ```sh
 zonesigner some.domain db.some.domain
 ```
-Finally, add a cron job that executes the key signing daily. After all, you don't want to fall prey to a [zone walking](http://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions#Zone_enumeration_issue.2C_controversy.2C_and_NSEC3) issue~
+Finally, add a cron job that executes the key signing daily. After all, you don't want to fall prey to a [zone walking](http://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions#Zone_enumeration_issue.2C_controversy.2C_and_NSEC3) issue!
 
 
 Configs
