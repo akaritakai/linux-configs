@@ -13,6 +13,10 @@ function add_domain() {
   # Add new domain
   local domain; read -p "Enter new domain: " domain; echo; readonly domain
   mysql -u root -p$mysql_pw -e "INSERT INTO mail.virtual_domains (name) VALUES ('$domain');"
+
+  # Don't forget to add the inbox folder!
+  mkdir -p /var/mail/vhosts/$domain
+  chown -R vmail:vmail /var/mail/vhosts/$domain
 }
 
 function add_user() {
