@@ -3,4 +3,3 @@
 
 # GPG Exports
 export GPGKEY=somekeyid
-export GPG_TTY=$(tty)
