@@ -33,7 +33,6 @@ znc() {
   # Build/Install contrib modules
   cd /usr/local/src/znc-contrib
   sed -i 's/MODDIR=.*/MODDIR=\/usr\/local\/lib\/znc/' Makefile
-  make clean
   make privmsg
 }
 
