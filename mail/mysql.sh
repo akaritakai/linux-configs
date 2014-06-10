@@ -7,9 +7,6 @@ function get_mysql_pw() {
 }
 
 function add_domain() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Add new domain
   local domain; read -p "Enter new domain: " domain; echo; readonly domain
   mysql -u root -p$mysql_pw -e "INSERT INTO mail.virtual_domains (name) VALUES ('$domain');"
@@ -20,9 +17,6 @@ function add_domain() {
 }
 
 function add_user() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show domain list
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT id,name FROM mail.virtual_domains;")
   if [ ! -z "$output" ]; then echo "$output"; fi
@@ -35,9 +29,6 @@ function add_user() {
 }
 
 function add_alias() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show user list
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT domain_id,email FROM mail.virtual_users;")
   if [ ! -z "$output" ]; then echo "$output"; fi
@@ -50,36 +41,24 @@ function add_alias() {
 }
 
 function list_domains() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show domain lsit
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT id,name FROM mail.virtual_domains;")
   if [ ! -z "$output" ]; then echo "$output"; fi
 }
 
 function list_users() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show user list
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT id,email FROM mail.virtual_users;")
   if [ ! -z "$output" ]; then echo "$output"; fi
 }
 
 function list_aliases() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show alias list
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT id,source,destination FROM mail.virtual_aliases;")
   if [ ! -z "$output" ]; then echo "$output"; fi
 }
 
 function delete_domain() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show domain list
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT id,name FROM mail.virtual_domains;")
   if [ ! -z "$output" ]; then echo "$output"; fi; echo
@@ -90,9 +69,6 @@ function delete_domain() {
 }
 
 function delete_user() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show user list
   local output=$(mysql -u root -p$mysql_pw -t <<< "SELECT id,email FROM mail.virtual_users;")
   if [ ! -z "$output" ]; then echo "$output"; fi; echo
@@ -103,9 +79,6 @@ function delete_user() {
 }
 
 function delete_alias() {
-  # Get MySQL password
-  local mysql_pw; get_mysql_pw mysql_pw; readonly mysql_pw; echo
-
   # Show alias list
   local output=$(mysql -u root -p$mysql_pw -t <<< " SELECT id,source,destination FROM mail.virtual_aliases;")
   if [ ! -z "$output" ]; then echo "$output"; fi; echo
@@ -115,30 +88,40 @@ function delete_alias() {
   mysql -u root -p$mysql_pw -e "DELETE FROM mail.virtual_aliases WHERE id='$alias_id';"
 }
 
+mysql_pw=""; get_mysql_pw mysql_pw; readonly mysql_pw; echo
+
 # Menu Options
-echo "E-Mail User Management"
-echo "1) Add Domain"
-echo "2) Add User"
-echo "3) Add Alias"
-echo "4) List Domains"
-echo "5) List Users"
-echo "6) List Aliases"
-echo "7) Delete Domain"
-echo "8) Delete Users"
-echo "9) Delete Alias"
+
+function print_menu_opts() {
+  echo "1) Add Domain"
+  echo "2) Add User"
+  echo "3) Add Alias"
+  echo "4) List Domains"
+  echo "5) List Users"
+  echo "6) List Aliases"
+  echo "7) Delete Domain"
+  echo "8) Delete Users"
+  echo "9) Delete Alias"
+  echo "0) Exit"
+}
+
+echo "MySQL Email Management"
+print_menu_opts
 
 while true; do
   read -p "Please select an option: " option
   case $option in
-    [1]* ) add_domain;    break;;
-    [2]* ) add_user;      break;;
-    [3]* ) add_alias;     break;;
-    [4]* ) list_domains;  break;;
-    [5]* ) list_users;    break;;
-    [6]* ) list_aliases;  break;;
-    [7]* ) delete_domain; break;;
-    [8]* ) delete_user;   break;;
-    [9]* ) delete_alias;  break;;
-       * ) echo "Please select an option 1-9.";;
+    [1]* ) add_domain;;
+    [2]* ) add_user;;
+    [3]* ) add_alias;;
+    [4]* ) list_domains;;
+    [5]* ) list_users;;
+    [6]* ) list_aliases;;
+    [7]* ) delete_domain;;
+    [8]* ) delete_user;;
+    [9]* ) delete_alias;;
+    [0]* ) break;;
+       * ) echo "Please select an option 0-9.";
+           echo; print_menu_opts;;
   esac
 done
