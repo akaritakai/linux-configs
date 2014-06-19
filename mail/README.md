@@ -13,13 +13,13 @@ Adding Domains
 Suppose you would like to add a domain `example.org` from which to send and receive mail fro
 m.
 
-1. Add the domain to the database: 
+Add the domain to the database: 
 
 ```sql
 INSERT INTO mail.virtual_domains (name) VALUES ('example.org');
 ```
 
-2. Add the inbox folder:
+Add the inbox folder:
 
 ```sh
 mkdir -p /var/mail/vhosts/example.org
@@ -30,7 +30,7 @@ Adding a New User
 =================
 Suppose you would like to add a new user to your domain. Let's call him `bob@example.org`. Let's get bob set up with password `asdf` as well!
 
-1. Add the user to the database:
+Add the user to the database:
 
 ```sql
 INSERT INTO mail.virtual_users (email, password)
@@ -39,7 +39,7 @@ INSERT INTO mail.virtual_users (email, password)
       CONCAT('$6$', SUBSTRING(SHA(RAND()), -16))));
 ```
 
-2. Allow the user to send e-mail from his own account:
+Allow the user to send e-mail from his own account:
 
 ```sql
 INSERT INTO mail.virtual_allowed (user, email) VALUES ('bob@example.org', 'bob@example.org');
@@ -49,7 +49,7 @@ Adding an Alias
 ===============
 Suppose you're `bob@example.org`. You maintain a support link for people to get support, and you want to forward all e-mail from `support@example.org` to your own address.
 
-1. Add the alias:
+Add the alias:
 
 ```sql
 INSERT INTO mail.virtual_aliases (source, destination) VALUES ('support@example.org', 'bob@example.org');
@@ -65,7 +65,7 @@ No-Reply E-mail Addresses
 =========================
 Suppose example.org sometimes sends mail from `no-reply@example.org` to give customers information about alerts and such. You don't /really/ want to that address to ever accept mail. What can you do?
 
-1. Add the e-mail address to the no-reply list:
+Add the e-mail address to the no-reply list:
 
 ```sql
 INSERT INTO mail.no_reply (email) VALUES ('no-reply@example.org');
