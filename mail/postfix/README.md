@@ -12,8 +12,6 @@ openssl dhparam -out /etc/postfix/crypto/dh512.pem 512
 openssl dhparam -out /etc/postfix/crypto/dh1024.pem 1024
 ```
 
-Note that you will also have to complete the setup in mysql.md
-
 Configs
 -------
 All configs should go relative to the /etc/postfix/ folder
