@@ -7,12 +7,13 @@ Installation
 ```sh
 apt-get update
 apt-get -y install postfix postfix-mysql
-openssl dhparam -out /etc/postfix/dh512.pem 512
-openssl dhparam -out /etc/postfix/dh1024.pem 1024
+mkdir -p /etc/postfix/crypto
+openssl dhparam -out /etc/postfix/crypto/dh512.pem 512
+openssl dhparam -out /etc/postfix/crypto/dh1024.pem 1024
 ```
 
 Note that you will also have to complete the setup in mysql.md
 
 Configs
 -------
-All configs should go in the /etc/postfix/ folder
+All configs should go relative to the /etc/postfix/ folder

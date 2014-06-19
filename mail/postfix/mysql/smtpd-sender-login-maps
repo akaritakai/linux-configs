@@ -2,4 +2,4 @@ user = mail
 password = mailpassword
 hosts = 127.0.0.1
 dbname = mail
-query = SELECT 1 FROM virtual_domains WHERE name='%s'
+query = SELECT user FROM virtual_allowed WHERE email='%s'

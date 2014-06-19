@@ -1,11 +1,9 @@
 # See /usr/share/postfix/main.cf.dist for a more commented and complete version.
 
-smtpd_banner = mail.some.domain SMTP Server
+# General Settings
+smtpd_banner = $myhostname ESMTP Server
 biff = no
-
-# appending .domain is the MUA's job
 append_dot_mydomain = no
-
 readme_directory = no
 
 # TLS parameters
@@ -13,40 +11,88 @@ smtpd_use_tls = yes
 smtpd_tls_auth_only = yes
 smtp_tls_security_level = may
 smtpd_tls_security_level = may
-smtp_tls_loglevel = 1
-smtpd_tls_loglevel = 0
 tls_ssl_options = NO_COMPRESSION
-smtpd_tls_cert_file = /etc/ssl/certs/some.domain.crt
-smtpd_tls_key_file = /etc/ssl/private/some.domain.key
+smtpd_tls_cert_file = /etc/ssl/certs/your.cert.here
+smtpd_tls_key_file = /etc/ssl/private/your.key.here
+smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtpd_tls_CApath = /etc/ssl/certs
 smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3
 smtpd_tls_mandatory_ciphers = high
 tls_high_cipherlist = EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128-SHA:AES128-SHA
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtpd_tls_dh512_param_file = /etc/postfix/dh512.pem
-smtpd_tls_dh1024_param_file = /etc/postfix/dh1024.pem
+smtpd_tls_dh512_param_file = /etc/postfix/crypto/dh512.pem
+smtpd_tls_dh1024_param_file = /etc/postfix/crypto/dh1024.pem
 
 # SASL options
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 smtpd_sasl_auth_enable = yes
-smtpd_sasl_security_options = noanonymous
 
-# Mail Settings
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
-myhostname = mail.some.domain
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
-myorigin = /etc/mailname
+# DKIM milter
+milter_protocol = 2
+milter_default_action = accept
+smtpd_milters = inet:localhost:12345
+non_smtpd_milters = inet:localhost:12345
+
+# Mail Server Settings
+smtpd_helo_required = yes
+myhostname = my.fqdn.of.server.here
+myorigin = my.fqdn.of.server.here
 mydestination = localhost
 mynetworks = 127.0.0.0/8 [::1]/128
 mailbox_size_limit = 0
 recipient_delimiter = +
-inet_interfaces = all
-inet_protocols = all
 
 # Virtual Transport Settings
 virtual_transport = lmtp:unix:private/dovecot-lmtp
-virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
-virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
-virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/mysql/virtual-mailbox-domains
+virtual_mailbox_maps = mysql:/etc/postfix/mysql/virtual-mailbox-maps
+virtual_alias_maps = mysql:/etc/postfix/mysql/virtual-alias-maps
+smtpd_sender_login_maps = mysql:/etc/postfix/mysql/smtpd-sender-login-maps
+
+# Transport Restrictions
+
+# Reject all client commands
+smtpd_client_restrictions =
+        # OK if sender is localhost
+        permit_mynetworks
+
+# Reject HELO/EHLO information
+smtpd_helo_restrictions =
+        # BAD if hostname is malformed
+        reject_invalid_helo_hostname,
+        # BAD if hostname not in FQDN format
+        reject_non_fqdn_helo_hostname
+
+# Reject MAIL FROM information
+smtpd_sender_restrictions =
+        # BAD if MAIL FROM not in FQDN form
+        reject_non_fqdn_sender,
+        # BAD if mail is from our domain but the e-mail addy isn't regged
+        reject_unlisted_sender,
+        # BAD if not logged on as respective domain user when sending from
+        # an email address from our domain
+        reject_sender_login_mismatch,
+        # BAD if MAIL FROM domain has no MX and A records
+        reject_unknown_sender_domain
+
+# Reject RCPT TO information (Relay Policy)
+smtpd_relay_restrictions =
+        # OK if user is logged in
+        permit_sasl_authenticated,
+        # BAD unless going to our domain
+        reject_unauth_destination
+
+# Reject RCPT TO information (Specific Policy)
+smtpd_recipient_restrictions =
+        # BAD if RCPT TO not in FQDN form
+        reject_non_fqdn_recipient,
+        # BAD if mail is to our domain but the e-mail addy isn't regged
+        reject_unlisted_recipient,
+        # BAD if user is listed as user we shouldn't reply to
+        check_recipient_access mysql:/etc/postfix/mysql/no-reply,
+        # BAD if RCPT TO domain has no MX and A records
+        reject_unknown_recipient_domain,
+        # OK if going to our domain
+        permit_auth_destination
