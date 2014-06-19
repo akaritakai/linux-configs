@@ -36,7 +36,7 @@ Suppose you would like to add a new user to your domain. Let's call him `bob@exa
 INSERT INTO mail.virtual_users (email, password)
   VALUES ('bob@example.org', 
     ENCRYPT('asdf',
-      CONCAT('\$6$', SUBSTRING(SHA(RAND()), -16))));
+      CONCAT('$6$', SUBSTRING(SHA(RAND()), -16))));
 ```
 
 2. Allow the user to send e-mail from his own account:
