@@ -66,8 +66,3 @@ CREATE TABLE `virtual_users` (
 
 
 ```
-
-Create Users
-------------
-
-Use the mysql.sh script
