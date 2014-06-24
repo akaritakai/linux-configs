@@ -2,6 +2,8 @@ samba
 ====
 samba providea a free server implementation of the SMB/CIFS networking protocol. As such, it provides file server services for Windows clients.
 
+**IMPORTANT NOTE:** I'm not sure on the exact set of instructions to get the MySQL backend to be recognized by default in Ubuntu. If anyone does know, let me know.
+
 Installation
 ------------
 ```sh
